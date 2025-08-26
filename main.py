@@ -1,4 +1,21 @@
-from telegram import (
+        # Save payment screenshot file_id and UTR no for manual verification
+        photo_file = update.message.photo[-1]
+        file_id = photo_file.file_id
+        utr_no = context.user_data.get('deposit_utr', 'Not provided')
+        
+        # Here you can save file_id and utr_no to DB or notify admin
+        
+        await update.message.reply_text(
+            f"Payment screenshot received.\nUTR Number: {utr_no}\nOur team will verify and add points soon."
+        )
+        await update.message.reply_text(
+            "Choose another option or send /start to go back to the main menu.",
+            reply_markup=InlineKeyboardMarkup(START_KEYBOARD)
+        )
+        return CHOOSING
+    else:
+        await update.message.reply_text("Please send a valid photo screenshot.")
+        return DEPOSIT_SCREENSHOTfrom telegram import (
     Update, InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto
 )
 from telegram.ext import (
@@ -149,24 +166,7 @@ async def handle_deposit_utr(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
 async def handle_deposit_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.message.photo:
-        # Save payment screenshot file_id and UTR no for manual verification
-        photo_file = update.message.photo[-1]
-        file_id = photo_file.file_id
-        utr_no = context.user_data.get('deposit_utr', 'Not provided')
-        
-        # Here you can save file_id and utr_no to DB or notify admin
-        
-        await update.message.reply_text(
-            f"Payment screenshot received.\nUTR Number: {utr_no}\nOur team will verify and add points soon."
-        )
-        await update.message.reply_text(
-            "Choose another option or send /start to go back to the main menu.",
-            reply_markup=InlineKeyboardMarkup(START_KEYBOARD)
-        )
-        return CHOOSING
-    else:
-        await update.message.reply_text("Please send a valid photo screenshot.")
-        return DEPOSIT_SCREENSHOT
+
 
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Operation cancelled. Send /start to begin again.")
@@ -178,7 +178,7 @@ if __name__ == '__main__':
 
     application = ApplicationBuilder().token(TOKEN).build()
 
-    conv_handler = ConversationHandler(
+    conv_handler = ConversationHandler( )
         entry_points=[CommandHandler('start', start)],
         states={
             CHOOSING: [CallbackQueryHandler(button_handler)],
