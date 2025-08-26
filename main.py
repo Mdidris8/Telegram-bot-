@@ -185,9 +185,6 @@ if __name__ == '__main__':
         },
         fallbacks=[CommandHandler('cancel', cancel)]
     )
-
-    application.add_handler(conv_handler)
-
-    application.run_polling()from telegram import (
-    Update, InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto
+ application.add_handler(conv_handlerapplication.run_polling)(
+                            (Update, InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto
 )
