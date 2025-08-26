@@ -190,9 +190,4 @@ if __name__ == '__main__':
 
     # This is the correct and final line to run your bot.
     application.run_polling()
-    import os
-
-port = int(os.environ.get('PORT', 5000))
-app.run(host='0.0.0.0', port=port)
-
     
