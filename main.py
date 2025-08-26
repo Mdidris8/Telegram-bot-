@@ -6,7 +6,7 @@ from telegram.ext import (
     ConversationHandler, ContextTypes, filters
 )
 
-TOKEN = 8284069837:AAFUNLCr1YzOAvl6hjj_syEohwjXHKvOq7g
+TOKEN = "8284069837:AAFUNLCr1YzOAvl6hjj_syEohwjXHKvOq7g"
 
 QR_CODE_IMAGE_URL = 'https://i.imgur.com/QRcodeSample.png'  # Replace with your QR code image URL
 
