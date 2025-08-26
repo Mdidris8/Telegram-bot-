@@ -1,21 +1,4 @@
-        # Save payment screenshot file_id and UTR no for manual verification
-        photo_file = update.message.photo[-1]
-        file_id = photo_file.file_id
-        utr_no = context.user_data.get('deposit_utr', 'Not provided')
-        
-        # Here you can save file_id and utr_no to DB or notify admin
-        
-        await update.message.reply_text(
-            f"Payment screenshot received.\nUTR Number: {utr_no}\nOur team will verify and add points soon."
-        )
-        await update.message.reply_text(
-            "Choose another option or send /start to go back to the main menu.",
-            reply_markup=InlineKeyboardMarkup(START_KEYBOARD)
-        )
-        return CHOOSING
-    else:
-        await update.message.reply_text("Please send a valid photo screenshot.")
-        return DEPOSIT_SCREENSHOTfrom telegram import (
+from telegram import (
     Update, InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto
 )
 from telegram.ext import (
@@ -123,8 +106,6 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def handle_instagram_views(update: Update, context: ContextTypes.DEFAULT_TYPE):
     reel_link = update.message.text
-    user = update.message.from_user
-    # Save `reel_link` and user info as needed here (e.g. DB or file)
     await update.message.reply_text(
         f"Received your reel link:\n{reel_link}\nOur team will process your Instagram views order soon."
     )
@@ -166,7 +147,23 @@ async def handle_deposit_utr(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
 async def handle_deposit_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.message.photo:
-
+        photo_file = update.message.photo[-1]
+        file_id = photo_file.file_id
+        utr_no = context.user_data.get('deposit_utr', 'Not provided')
+        
+        # Yahan aap file_id aur utr_no DB ya kisi admin ko bhejne ka code likh sakte hain
+        
+        await update.message.reply_text(
+            f"Payment screenshot received.\nUTR Number: {utr_no}\nOur team will verify and add points soon."
+        )
+        await update.message.reply_text(
+            "Choose another option or send /start to go back to the main menu.",
+            reply_markup=InlineKeyboardMarkup(START_KEYBOARD)
+        )
+        return CHOOSING
+    else:
+        await update.message.reply_text("Please send a valid photo screenshot.")
+        return DEPOSIT_SCREENSHOT
 
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Operation cancelled. Send /start to begin again.")
@@ -174,15 +171,23 @@ async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 if __name__ == '__main__':
-    import asyncio
-
     application = ApplicationBuilder().token(TOKEN).build()
 
-    conv_handler = ConversationHandler( )
+    conv_handler = ConversationHandler(
         entry_points=[CommandHandler('start', start)],
         states={
             CHOOSING: [CallbackQueryHandler(button_handler)],
             INSTAGRAM_VIEWS: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_instagram_views)],
             INSTAGRAM_FOLLOWERS: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_instagram_followers)],
             TELEGRAM_MEMBERS: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_telegram_members)],
-            DEPOSIT_UTR: [MessageHandler(filters ) ] }
+            DEPOSIT_UTR: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_deposit_utr)],
+            DEPOSIT_SCREENSHOT: [MessageHandler(filters.PHOTO, handle_deposit_screenshot)]
+        },
+        fallbacks=[CommandHandler('cancel', cancel)]
+    )
+
+    application.add_handler(conv_handler)
+
+    application.run_polling()from telegram import (
+    Update, InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto
+)
