@@ -1,4 +1,4 @@
-```python
+
 from telegram import (
     Update, InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto
 )
