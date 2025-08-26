@@ -185,4 +185,4 @@ if __name__ == '__main__':
             INSTAGRAM_VIEWS: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_instagram_views)],
             INSTAGRAM_FOLLOWERS: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_instagram_followers)],
             TELEGRAM_MEMBERS: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_telegram_members)],
-            DEPOSIT_UTR: [MessageHandler(filters ) ]
+            DEPOSIT_UTR: [MessageHandler(filters ) ] }
