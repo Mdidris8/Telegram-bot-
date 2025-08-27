@@ -9,7 +9,7 @@ CHANNEL_ID = -1003028883651   # ✅ Your Private Channel ID
 UPI_ID = "idris081006@fam"    # ✅ Your UPI ID
 QR_CODE_PATH = "qr.png"       # ⚠️ Apna QR Code ka image file (bot ke same folder me rakho)
 
-bot = telebot.TeleBot(8284069837:AAFUNLCr1YzOAvl6hjj_syEohwjXHKvOq7g)
+bot = telebot.TeleBot('8284069837:AAFUNLCr1YzOAvl6hjj_syEohwjXHKvOq7g')
 
 
 # ==============================
