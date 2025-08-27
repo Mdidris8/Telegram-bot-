@@ -7,10 +7,8 @@ from telebot import types
 TOKEN = "8284069837:AAFUNLCr1YzOAvl6hjj_syEohwjXHKvOq7g"   # ✅ Your Bot Token
 CHANNEL_ID = -1003028883651   # ✅ Your Private Channel ID
 UPI_ID = "idris081006@fam"    # ✅ Your UPI ID
-QR_CODE_PATH = "qr.png"       # ⚠️ Apna QR Code ka image file (bot ke same folder me rakho)
 
-bot = telebot.TeleBot('8284069837:AAFUNLCr1YzOAvl6hjj_syEohwjXHKvOq7g')
-
+bot = telebot.TeleBot(TOKEN)
 
 # ==============================
 # 🔰 MAIN MENU FUNCTION
@@ -39,21 +37,17 @@ def handle_message(message):
     user = message.from_user
     username = f"@{user.username}" if user.username else user.first_name
 
-    # ---- BUY 1K VIEWS ----
     if message.text == "💠 Buy 1K Views":
         msg = bot.send_message(message.chat.id, "🔗 Send your Instagram link for *1K Views – 39 Token*")
         bot.register_next_step_handler(msg, lambda m: process_order(m, username, "1K Views – 39 Token"))
 
-    # ---- BUY 10K VIEWS ----
     elif message.text == "💠 Buy 10K Views":
         msg = bot.send_message(message.chat.id, "🔗 Send your Instagram link for *10K Views – 99 Token*")
         bot.register_next_step_handler(msg, lambda m: process_order(m, username, "10K Views – 99 Token"))
 
-    # ---- DEPOSIT ----
     elif message.text == "💰 Deposit":
         send_deposit_instructions(message.chat.id, username)
 
-    # ---- HELP ----
     elif message.text == "❓ Help":
         bot.send_message(message.chat.id, "📞 Contact support: @YourSupportUsername")
 
@@ -79,7 +73,7 @@ def process_order(message, username, order_type):
 
 
 # ==============================
-# 🔰 DEPOSIT FLOW
+# 🔰 DEPOSIT FLOW (No QR code here)
 # ==============================
 def send_deposit_instructions(chat_id, username):
     order_text = f"💰 Deposit Request\n\nUser: {username}"
@@ -92,12 +86,10 @@ def send_deposit_instructions(chat_id, username):
 
     caption = (
         f"💳 *Deposit Instructions*\n\n"
-        f"📌 UPI ID: `{UPI_ID}`\n"
-        f"📷 Scan the QR below to pay\n\n"
+        f"📌 UPI ID: `{UPI_ID}`\n\n"
         f"👉 After payment, click ✅ I have paid"
     )
-    with open(QR_CODE_PATH, "rb") as qr:
-        bot.send_photo(chat_id, qr, caption, parse_mode="Markdown", reply_markup=inline_markup)
+    bot.send_message(chat_id, caption, parse_mode="Markdown", reply_markup=inline_markup)
 
 
 # ==============================
@@ -110,7 +102,7 @@ def callback_handler(call):
 
     if call.data == "paid":
         bot.send_message(call.message.chat.id,
-                         "📤 Please send your *payment screenshot or UTR number* here.")
+                         "📤 Please send your *payment screenshot or UTR number* here.", parse_mode="Markdown")
         bot.answer_callback_query(call.id, "✅ Now send payment proof!")
         bot.register_next_step_handler(call.message, get_payment_proof, username)
 
